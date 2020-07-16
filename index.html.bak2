@@ -1,0 +1,118 @@
+<html>
+
+<style>
+.my_canvas {
+    background: #eee; 
+    width: 200px; 
+    height: 200px; 
+    border: 1px #ccc solid;
+}
+</style>
+
+
+<canvas id="board" class="my_canvas"></canvas> 
+
+
+
+<script type="text/javascript">
+function clearCanvas( context, canvas ) {
+    context.clearRect( 0, 0, canvas.width, canvas.height );
+
+}
+
+function draw (obj) {
+    var canvas, context, x, y, xx, yy, x0, y0;
+
+    // get a reference to the board, and the drawing context
+    canvas  = document.getElementById('board');
+    if ( canvas && canvas.getContext ) {
+        context = canvas.getContext('2d');
+
+    } else {
+        // unsupported browser?
+        alert("Couldn't get a reference to the HTML 5 canvas."
+          + "\nYour browser doesn't appear to support this page.");
+
+        return;
+    }
+
+
+    // CLEAR
+    // note: the button toggles to support draw or clear...this does the clear operation
+    if( obj.value.match(/clear/i) ) {
+        obj.value  = 'Draw';
+
+        clearCanvas( context, canvas );
+
+        // if we're clearing the canvas, early return to avoid running the drawing code below
+        return;
+    }
+
+
+    // DRAW
+    // note: the button toggles to support draw or clear...this does the draw operation
+    obj.value = 'Clear';
+
+
+    // set up the variables
+        x0 = 10; // starting values
+        y0 = 10;
+
+        x  = x0; // operating vars
+        y0 = 10;
+
+        xx = 50; // size of the legs of the shape
+        yy = 25;
+
+
+    // perform the moves and line drawing
+        x =  x0;
+        y =  y0;
+        context.moveTo( x, y );
+
+        x += xx;
+        y +=  0;
+        context.moveTo( x, y );
+
+        x += xx;
+        y +=  0;
+        context.lineTo( x, y );
+
+        x += xx;
+        y += yy;
+        context.lineTo( x, y );
+
+        x += ( xx * -1 );
+        y+=yy;
+        context.lineTo( x, y );
+
+        x += ( xx * -1 );
+        y += 0;
+        context.lineTo( x, y );
+
+        x += ( xx * -1 );
+        y += ( yy * -1 );
+        context.lineTo( x, y );
+
+        x += xx;
+        y+=( yy * -1 );
+        context.lineTo( x, y );
+
+    // now render it per our style definitions
+        context.strokeStyle = "rgba(0,0,0,1)";
+        context.stroke();
+
+    // add some text
+        context.font = '1.1em Arial';
+        context.fillText('Got Hexagon?', 28, 40);
+
+
+}
+</script>
+
+
+<form style="padding:10px;">
+	<input type="button" value="Draw" onclick="draw(this);">
+</form>
+
+</html>
