@@ -6,24 +6,134 @@
 var	canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
-var bottom_left_player_plate_image = new Image(width=45, height=45);
-bottom_left_player_plate_image.src = "./images/hwingo_plate.png"
-bottom_left_player_plate_image.onload = function() {
-    var bottom_left_plate_center_x = canvas.width * 60 / 490;
-    var bottom_left_plate_center_y = canvas.height - canvas.height * 40 / 275;
-    var plate_radius = canvas.width * 15 / 490;
-    var cup_radius = canvas.width * 7.5 / 490;
-    context.save();
-    context.beginPath();
-    context.moveTo(bottom_left_plate_center_x, bottom_left_plate_center_y);
-    context.arc(bottom_left_plate_center_x, bottom_left_plate_center_y, plate_radius, 0, Math.PI * 2, true);
-    context.clip();
-    context.drawImage(bottom_left_player_plate_image,
-                      dx=bottom_left_plate_center_x - plate_radius, dy=bottom_left_plate_center_y - plate_radius,
-                      dWidth=plate_radius*2, dHeight=plate_radius*2);
-    }
+var drawing_started = false;
 
-context.restore();
+//------------------------------------------------------------------------------------------\
+// Some video stuff.
+//------------------------------------------------------------------------------------------
+var wheat_video = document.createElement('video');
+wheat_video.center = window.center;
+wheat_video.muted = true;
+var wheat_patterns = [];
+function draw_wheat_frame(e) {
+  //wheat_video.pause();
+  wheat_patterns.push(context.createPattern(wheat_video, "repeat"));
+  //wheat_video.play();
+}
+wheat_video.addEventListener('timeupdate', draw_wheat_frame, false);
+wheat_video.src = "./images/wheat2.mp4";
+wheat_video.play();
+
+var ocean_video = document.createElement('video');
+ocean_video.center = window.center;
+ocean_video.muted = true;
+var ocean_patterns = [];
+function draw_ocean_frame(e) {
+  //ocean_video.pause();
+  ocean_patterns.push(context.createPattern(ocean_video, "repeat"));
+  //ocean_video.play();
+}
+ocean_video.addEventListener('timeupdate', draw_ocean_frame, false);
+ocean_video.src = "./images/ocean.mp4";
+ocean_video.play();
+
+var ore_video = document.createElement('video');
+ore_video.muted = true;
+ore_video.center = window.center;
+var ore_patterns = [];
+function draw_ore_frame(e) {
+  //ore_video.pause();
+  ore_patterns.push(context.createPattern(ore_video, "repeat"));
+  //ore_video.play();
+}
+ore_video.addEventListener('timeupdate', draw_ore_frame, false);
+ore_video.src = "./images/ore2.mp4";
+ore_video.play();
+
+var brick_video = document.createElement('video');
+brick_video.muted = true;
+brick_video.center = window.center;
+var brick_patterns = [];
+function draw_brick_frame(e) {
+  //brick_video.pause();
+  brick_patterns.push(context.createPattern(brick_video, "repeat"));
+  //brick_video.play();
+}
+brick_video.addEventListener('timeupdate', draw_brick_frame, false);
+brick_video.src = "./images/brick.mp4";
+brick_video.play();
+
+var grass_video = document.createElement('video');
+grass_video.muted = true;
+grass_video.center = window.center;
+var grass_patterns = [];
+function draw_grass_frame(e) {
+  //grass_video.pause();
+  grass_patterns.push(context.createPattern(grass_video, "repeat"));
+  //grass_video.play();
+}
+grass_video.addEventListener('timeupdate', draw_grass_frame, false);
+grass_video.src = "./images/grass2.mp4";
+grass_video.play();
+
+var wood_video = document.createElement('video');
+wood_video.muted = true;
+wood_video.center = window.center;
+var wood_patterns = [];
+function draw_wood_frame(e) {
+  //wood_video.pause();
+  wood_patterns.push(context.createPattern(wood_video, "repeat"));
+  //wood_video.play();
+}
+wood_video.addEventListener('timeupdate', draw_wood_frame, false);
+wood_video.src = "./images/trees3.mp4";
+wood_video.play();
+
+var desert_video = document.createElement('video');
+desert_video.muted = true;
+desert_video.center = window.center;
+var desert_patterns = [];
+function draw_desert_frame(e) {
+  //desert_video.pause();
+  desert_patterns.push(context.createPattern(desert_video, "repeat"));
+  //desert_video.play();
+}
+desert_video.addEventListener('timeupdate', draw_desert_frame, false);
+desert_video.src = "./images/desert.mp4";
+desert_video.play();
+
+//------------------------------------------------------------------------------------------
+// Load all of the fill pattern images / videos.
+//------------------------------------------------------------------------------------------
+var table_image = new Image();
+var table_top_pattern;
+table_image.src = "./images/table_top.jpeg"
+table_image.onload = function() {
+    table_top_pattern = context.createPattern(table_image, "repeat");
+    //context.fillStyle = table_top_pattern;
+    //context.fillRect(0, 0, canvas.width, canvas.height);
+    //context.save();
+}
+
+var board_outer_image = new Image();
+var board_outer_pattern;
+board_outer_image.src = "./images/dark_wood.jpg"
+board_outer_image.onload = function() {
+    board_outer_pattern = context.createPattern(board_outer_image, "repeat");
+}
+
+var board_inner_image = new Image();
+var board_inner_pattern;
+board_inner_image.src = "./images/inner_wood_lighter.jpg"
+board_inner_image.onload = function() {
+    board_inner_pattern = context.createPattern(board_inner_image, "repeat");
+}
+
+
+
+
+
+//context.restore();
 
 function load_gamestate() {}
 
@@ -36,6 +146,41 @@ function draw_left_side_cards(canvas, context, num_regular, num_development)
 
 
 window.onload = function(){
+
+    //------------------------------------------------------------------------------------------
+    // Draw the background.
+    //------------------------------------------------------------------------------------------
+    //table_image.onload();
+    //context.restore();
+
+    var bottom_left_player_plate_image = new Image(width=45, height=45);
+    bottom_left_player_plate_image.src = "./images/hwingo_plate.png"
+    bottom_left_player_plate_image.onload = function()
+        {
+        if (drawing_started != true)
+            {
+            return;
+            }
+        //table_image.onload();
+        //context.fillStyle = table_top_pattern;
+        //context.fillRect(0, 0, canvas.width, canvas.height);
+        context.save();
+        var bottom_left_plate_center_x = canvas.width * 60 / 490;
+        var bottom_left_plate_center_y = canvas.height - canvas.height * 40 / 275;
+        var plate_radius = canvas.width * 15 / 490;
+        var cup_radius = canvas.width * 7.5 / 490;
+        context.beginPath();
+        context.moveTo(bottom_left_plate_center_x, bottom_left_plate_center_y);
+        context.arc(bottom_left_plate_center_x, bottom_left_plate_center_y, plate_radius, 0, Math.PI * 2, true);
+        context.clip();
+        context.drawImage(bottom_left_player_plate_image,
+                          dx=bottom_left_plate_center_x - plate_radius, dy=bottom_left_plate_center_y - plate_radius,
+                          dWidth=plate_radius*2, dHeight=plate_radius*2);
+        }
+
+    //context.restore();
+
+
 	var	time = 0,
 		cos = Math.cos,
 		sin = Math.sin,
@@ -45,128 +190,6 @@ window.onload = function(){
 		width = canvas.width = window.innerWidth;
 		height = canvas.height = window.innerHeight;
 	}
-
-
-	//------------------------------------------------------------------------------------------\
-	// Some video stuff.
-	//------------------------------------------------------------------------------------------
-    var wheat_video = document.createElement('video');
-    wheat_video.center = window.center;
-    wheat_video.muted = true;
-    var wheat_patterns = [];
-    function draw_wheat_frame(e) {
-      //wheat_video.pause();
-      wheat_patterns.push(context.createPattern(wheat_video, "repeat"));
-      //wheat_video.play();
-    }
-    wheat_video.addEventListener('timeupdate', draw_wheat_frame, false);
-    wheat_video.src = "./images/wheat2.mp4";
-    wheat_video.play();
-
-    var ocean_video = document.createElement('video');
-    ocean_video.center = window.center;
-    ocean_video.muted = true;
-    var ocean_patterns = [];
-    function draw_ocean_frame(e) {
-      //ocean_video.pause();
-      ocean_patterns.push(context.createPattern(ocean_video, "repeat"));
-      //ocean_video.play();
-    }
-    ocean_video.addEventListener('timeupdate', draw_ocean_frame, false);
-    ocean_video.src = "./images/ocean.mp4";
-    ocean_video.play();
-
-    var ore_video = document.createElement('video');
-    ore_video.muted = true;
-    ore_video.center = window.center;
-    var ore_patterns = [];
-    function draw_ore_frame(e) {
-      //ore_video.pause();
-      ore_patterns.push(context.createPattern(ore_video, "repeat"));
-      //ore_video.play();
-    }
-    ore_video.addEventListener('timeupdate', draw_ore_frame, false);
-    ore_video.src = "./images/ore2.mp4";
-    ore_video.play();
-
-    var brick_video = document.createElement('video');
-    brick_video.muted = true;
-    brick_video.center = window.center;
-    var brick_patterns = [];
-    function draw_brick_frame(e) {
-      //brick_video.pause();
-      brick_patterns.push(context.createPattern(brick_video, "repeat"));
-      //brick_video.play();
-    }
-    brick_video.addEventListener('timeupdate', draw_brick_frame, false);
-    brick_video.src = "./images/brick.mp4";
-    brick_video.play();
-
-    var grass_video = document.createElement('video');
-    grass_video.muted = true;
-    grass_video.center = window.center;
-    var grass_patterns = [];
-    function draw_grass_frame(e) {
-      //grass_video.pause();
-      grass_patterns.push(context.createPattern(grass_video, "repeat"));
-      //grass_video.play();
-    }
-    grass_video.addEventListener('timeupdate', draw_grass_frame, false);
-    grass_video.src = "./images/grass2.mp4";
-    grass_video.play();
-
-    var wood_video = document.createElement('video');
-    wood_video.muted = true;
-    wood_video.center = window.center;
-    var wood_patterns = [];
-    function draw_wood_frame(e) {
-      //wood_video.pause();
-      wood_patterns.push(context.createPattern(wood_video, "repeat"));
-      //wood_video.play();
-    }
-    wood_video.addEventListener('timeupdate', draw_wood_frame, false);
-    wood_video.src = "./images/trees3.mp4";
-    wood_video.play();
-
-    var desert_video = document.createElement('video');
-    desert_video.muted = true;
-    desert_video.center = window.center;
-    var desert_patterns = [];
-    function draw_desert_frame(e) {
-      //desert_video.pause();
-      desert_patterns.push(context.createPattern(desert_video, "repeat"));
-      //desert_video.play();
-    }
-    desert_video.addEventListener('timeupdate', draw_desert_frame, false);
-    desert_video.src = "./images/desert.mp4";
-    desert_video.play();
-
-	//------------------------------------------------------------------------------------------
-	// Load all of the fill pattern images / videos.
-	//------------------------------------------------------------------------------------------
-	var table_image = new Image();
-	var table_top_pattern;
-	table_image.src = "./images/table_top.jpeg"
-	table_image.onload = function() {
-        table_top_pattern = context.createPattern(table_image, "repeat");
-	}
-
-	var board_outer_image = new Image();
-	var board_outer_pattern;
-	board_outer_image.src = "./images/dark_wood.jpg"
-	board_outer_image.onload = function() {
-        board_outer_pattern = context.createPattern(board_outer_image, "repeat");
-	}
-
-	var board_inner_image = new Image();
-	var board_inner_pattern;
-	board_inner_image.src = "./images/inner_wood_lighter.jpg"
-	board_inner_image.onload = function() {
-        board_inner_pattern = context.createPattern(board_inner_image, "repeat");
-	}
-
-
-
 
 	// Monitor browser resize
 	addEventListener( 'resize', resize, false );
@@ -193,9 +216,13 @@ window.onload = function(){
 	var counter = 0;  // Use this counter to access the relevant frame number for the hex patterns.
 	setInterval( function() {
 
-	    // The background color.
-	    context.fillStyle = table_top_pattern;
+	    drawing_started = true;
+
+        context.fillStyle = table_top_pattern;
         context.fillRect(0, 0, canvas.width, canvas.height);
+
+        //bottom_left_player_plate_image.onload();
+        //context.restore();
 
         //-------------------------------------------------------------------------------------------------------------
         // Define structural parameters to layout the board, using ratios relative to the 1920 x 1080 resolution.
@@ -433,6 +460,9 @@ window.onload = function(){
         context.lineTo(tb_player_x_offset + tag_length, canvas.height - tb_player_y_offset);
         context.fillStyle = board_outer_pattern;
         context.fill();
+
+        bottom_left_player_plate_image.onload();
+        context.restore();
 
 	}, 33*5);
 }
