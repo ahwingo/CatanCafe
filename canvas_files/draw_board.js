@@ -1,37 +1,33 @@
-
 /*
- *  This script contains functions which will draw the catan board on the canvas.
+ * All of the Catan Cafe main code sits here. This should definitely be refactored....
  */
 
+//----------------------------------------------------------------------------------------------------------------------
+// Create the global objects, including the canvas and context.
+//----------------------------------------------------------------------------------------------------------------------
 var	canvas = document.querySelector("canvas");
 var context = canvas.getContext("2d");
 
-var drawing_started = false;
+var drawing_started = false;  // Use this to prevent certain things from being drawn too early.
 
-//------------------------------------------------------------------------------------------\
-// Some video stuff.
-//------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+// Load all of the resource type gifs into memory. Store the in arrays for use later.
+//----------------------------------------------------------------------------------------------------------------------
 var wheat_video = document.createElement('video');
-wheat_video.center = window.center;
 wheat_video.muted = true;
 var wheat_patterns = [];
 function draw_wheat_frame(e) {
-  //wheat_video.pause();
   wheat_patterns.push(context.createPattern(wheat_video, "repeat"));
-  //wheat_video.play();
 }
 wheat_video.addEventListener('timeupdate', draw_wheat_frame, false);
 wheat_video.src = "./images/wheat2.mp4";
 wheat_video.play();
 
 var ocean_video = document.createElement('video');
-ocean_video.center = window.center;
 ocean_video.muted = true;
 var ocean_patterns = [];
 function draw_ocean_frame(e) {
-  //ocean_video.pause();
   ocean_patterns.push(context.createPattern(ocean_video, "repeat"));
-  //ocean_video.play();
 }
 ocean_video.addEventListener('timeupdate', draw_ocean_frame, false);
 ocean_video.src = "./images/ocean.mp4";
@@ -39,12 +35,9 @@ ocean_video.play();
 
 var ore_video = document.createElement('video');
 ore_video.muted = true;
-ore_video.center = window.center;
 var ore_patterns = [];
 function draw_ore_frame(e) {
-  //ore_video.pause();
   ore_patterns.push(context.createPattern(ore_video, "repeat"));
-  //ore_video.play();
 }
 ore_video.addEventListener('timeupdate', draw_ore_frame, false);
 ore_video.src = "./images/ore2.mp4";
@@ -52,12 +45,9 @@ ore_video.play();
 
 var brick_video = document.createElement('video');
 brick_video.muted = true;
-brick_video.center = window.center;
 var brick_patterns = [];
 function draw_brick_frame(e) {
-  //brick_video.pause();
   brick_patterns.push(context.createPattern(brick_video, "repeat"));
-  //brick_video.play();
 }
 brick_video.addEventListener('timeupdate', draw_brick_frame, false);
 brick_video.src = "./images/brick.mp4";
@@ -65,25 +55,19 @@ brick_video.play();
 
 var grass_video = document.createElement('video');
 grass_video.muted = true;
-grass_video.center = window.center;
 var grass_patterns = [];
 function draw_grass_frame(e) {
-  //grass_video.pause();
   grass_patterns.push(context.createPattern(grass_video, "repeat"));
-  //grass_video.play();
 }
 grass_video.addEventListener('timeupdate', draw_grass_frame, false);
-grass_video.src = "./images/grass2.mp4";
+grass_video.src = "./images/yellowgrass.mp4";
 grass_video.play();
 
 var wood_video = document.createElement('video');
 wood_video.muted = true;
-wood_video.center = window.center;
 var wood_patterns = [];
 function draw_wood_frame(e) {
-  //wood_video.pause();
   wood_patterns.push(context.createPattern(wood_video, "repeat"));
-  //wood_video.play();
 }
 wood_video.addEventListener('timeupdate', draw_wood_frame, false);
 wood_video.src = "./images/trees3.mp4";
@@ -91,28 +75,23 @@ wood_video.play();
 
 var desert_video = document.createElement('video');
 desert_video.muted = true;
-desert_video.center = window.center;
 var desert_patterns = [];
 function draw_desert_frame(e) {
-  //desert_video.pause();
   desert_patterns.push(context.createPattern(desert_video, "repeat"));
-  //desert_video.play();
 }
 desert_video.addEventListener('timeupdate', draw_desert_frame, false);
 desert_video.src = "./images/desert.mp4";
 desert_video.play();
 
-//------------------------------------------------------------------------------------------
-// Load all of the fill pattern images / videos.
-//------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------
+// Load the table and board images into pattern types, which will be used as part of the background.
+//----------------------------------------------------------------------------------------------------------------------
 var table_image = new Image();
 var table_top_pattern;
-table_image.src = "./images/table_top.jpeg"
+table_image.src = "./images/table_top_blue.jpeg"
 table_image.onload = function() {
     table_top_pattern = context.createPattern(table_image, "repeat");
-    //context.fillStyle = table_top_pattern;
-    //context.fillRect(0, 0, canvas.width, canvas.height);
-    //context.save();
 }
 
 var board_outer_image = new Image();
@@ -129,13 +108,42 @@ board_inner_image.onload = function() {
     board_inner_pattern = context.createPattern(board_inner_image, "repeat");
 }
 
+var nametag_image = new Image();
+var nametag_pattern;
+//nametag_image.src = "./images/slate.jpeg"
+nametag_image.src = "./images/chalkboard.jpg"
+nametag_image.onload = function() {
+    nametag_pattern = context.createPattern(nametag_image, "repeat");
+}
+
+var nametag_border_image = new Image();
+var nametag_border_pattern;
+nametag_border_image.src = "./images/slate.jpeg"
+nametag_border_image.onload = function() {
+    nametag_border_pattern = context.createPattern(nametag_border_image, "repeat");
+}
+
+var chalk_image = new Image();
+var chalk_pattern;
+chalk_image.src = "./images/chalk.jpg"
+chalk_image.onload = function() {
+    chalk_pattern = context.createPattern(chalk_image, "repeat");
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+// This function will load the game state from the game state file on the server.
+//----------------------------------------------------------------------------------------------------------------------
+function load_game_state()
+    {
+    // TODO Write all of this...
+    return;
+    }
 
 
 
-
-//context.restore();
-
-function load_gamestate() {}
+//----------------------------------------------------------------------------------------------------------------------
+// These functions will display cards for the corresponding players, based on the game state.
+//----------------------------------------------------------------------------------------------------------------------
 
 function draw_left_side_cards(canvas, context, num_regular, num_development)
     {
@@ -144,41 +152,77 @@ function draw_left_side_cards(canvas, context, num_regular, num_development)
 
     }
 
+//----------------------------------------------------------------------------------------------------------------------
+// This block will load the cup and plate icons for each player.
+//----------------------------------------------------------------------------------------------------------------------
+
+// For the left and right player, we need their names to be vertical.
+function write_vertical_text(player_id, center_x, center_y)
+    {
+    context.save();
+    context.font = "30pt arial"
+    var new_name = player_id[0] + ". " + player_id.slice(1);
+    context.translate(canvas.height, canvas.width);
+    context.rotate(-0.5*Math.PI);
+    context.fillText(new_name, center_x, center_y);
+    context.restore();
+    }
+
+// Bottom player.
+var bottom_player_id = "HWingo";
+var bottom_left_player_plate_image = new Image();
+bottom_left_player_plate_image.src = "./images/hwingo_plate.png"
+var bottom_left_player_cup_image = new Image();
+bottom_left_player_cup_image.src = "./images/hwingo_cup.png"
+
+// Right player.
+var right_player_id = "CFreeman";
+var bottom_right_player_plate_image = new Image();
+bottom_right_player_plate_image.src = "./images/cfreeman_plate.png"
+var bottom_right_player_cup_image = new Image();
+bottom_right_player_cup_image.src = "./images/cfreeman_cup.png"
+
+// Left player.
+var left_player_id = "KFreeman";
+var top_left_player_plate_image = new Image();
+top_left_player_plate_image.src = "./images/kfreeman_plate.png"
+var top_left_player_cup_image = new Image();
+top_left_player_cup_image.src = "./images/kfreeman_cup.png"
+
+// Top player.
+var top_player_id = "SGraham";
+var top_right_player_plate_image = new Image();
+top_right_player_plate_image.src = "./images/sgraham_plate.png"
+var top_right_player_cup_image = new Image();
+top_right_player_cup_image.src = "./images/sgraham_cup.png"
+
+function display_plate_and_cup_icons(plate_radius, cup_radius, plate_image, cup_image, plate_x, plate_y, cup_x, cup_y)
+    {
+    context.save();
+    context.beginPath();
+    context.arc(plate_x, plate_y, plate_radius, 0, Math.PI * 2, true);
+    context.clip();
+    context.drawImage(plate_image,
+                      dx=plate_x - plate_radius, dy=plate_y - plate_radius,
+                      dWidth=plate_radius*2, dHeight=plate_radius*2);
+    context.restore();
+    context.save();
+    context.beginPath();
+    context.arc(cup_x, cup_y, cup_radius, 0, Math.PI * 2, true);
+    context.clip();
+    context.drawImage(cup_image,
+                      dx=cup_x - cup_radius, dy=cup_y - cup_radius,
+                      dWidth=cup_radius*2, dHeight=cup_radius*2);
+    context.restore();
+    }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// The main action will happen here.
+//----------------------------------------------------------------------------------------------------------------------
 
 window.onload = function(){
 
-    //------------------------------------------------------------------------------------------
-    // Draw the background.
-    //------------------------------------------------------------------------------------------
-    //table_image.onload();
-    //context.restore();
-
-    var bottom_left_player_plate_image = new Image(width=45, height=45);
-    bottom_left_player_plate_image.src = "./images/hwingo_plate.png"
-    bottom_left_player_plate_image.onload = function()
-        {
-        if (drawing_started != true)
-            {
-            return;
-            }
-        //table_image.onload();
-        //context.fillStyle = table_top_pattern;
-        //context.fillRect(0, 0, canvas.width, canvas.height);
-        context.save();
-        var bottom_left_plate_center_x = canvas.width * 60 / 490;
-        var bottom_left_plate_center_y = canvas.height - canvas.height * 40 / 275;
-        var plate_radius = canvas.width * 15 / 490;
-        var cup_radius = canvas.width * 7.5 / 490;
-        context.beginPath();
-        context.moveTo(bottom_left_plate_center_x, bottom_left_plate_center_y);
-        context.arc(bottom_left_plate_center_x, bottom_left_plate_center_y, plate_radius, 0, Math.PI * 2, true);
-        context.clip();
-        context.drawImage(bottom_left_player_plate_image,
-                          dx=bottom_left_plate_center_x - plate_radius, dy=bottom_left_plate_center_y - plate_radius,
-                          dWidth=plate_radius*2, dHeight=plate_radius*2);
-        }
-
-    //context.restore();
 
 
 	var	time = 0,
@@ -353,54 +397,46 @@ window.onload = function(){
         var plate_radius = canvas.width * 15 / 490;
         var cup_radius = canvas.width * 7.5 / 490;
 
+        // Display the top left icons.
         var top_left_plate_center_x = canvas.width * 60 / 490;
         var top_left_plate_center_y = canvas.height * 45 / 275;
-        context.beginPath();
-        context.arc(top_left_plate_center_x, top_left_plate_center_y, plate_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
-
         var top_left_cup_center_x = canvas.width * 25 / 490;
         var top_left_cup_center_y = canvas.height * 22 / 275;
-        context.beginPath();
-        context.arc(top_left_cup_center_x, top_left_cup_center_y, cup_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
+        display_plate_and_cup_icons(plate_radius, cup_radius,
+                                    top_left_player_plate_image, top_left_player_cup_image,
+                                    top_left_plate_center_x, top_left_plate_center_y,
+                                    top_left_cup_center_x, top_left_cup_center_y);
 
+        // Display the top right icons.
         var top_right_plate_center_x = canvas.width - canvas.width * 30 / 490;
         var top_right_plate_center_y = canvas.height * 30 / 275;
-        context.beginPath();
-        context.arc(top_right_plate_center_x, top_right_plate_center_y, plate_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
-
         var top_right_cup_center_x = canvas.width - canvas.width * 56 / 490;
         var top_right_cup_center_y = canvas.height * 46 / 275;
-        context.beginPath();
-        context.arc(top_right_cup_center_x, top_right_cup_center_y, cup_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
+        display_plate_and_cup_icons(plate_radius, cup_radius,
+                                    top_right_player_plate_image, top_right_player_cup_image,
+                                    top_right_plate_center_x, top_right_plate_center_y,
+                                    top_right_cup_center_x, top_right_cup_center_y);
 
+        // Display the bottom left icons.
+        var bottom_left_plate_center_x = canvas.width * 60 / 490;
+        var bottom_left_plate_center_y = canvas.height - canvas.height * 40 / 275;
         var bottom_left_cup_center_x = canvas.width * 28 / 490;
         var bottom_left_cup_center_y = canvas.height - canvas.height * 40 / 275;
-        context.beginPath();
-        context.arc(bottom_left_cup_center_x, bottom_left_cup_center_y, cup_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
+        display_plate_and_cup_icons(plate_radius, cup_radius,
+                                    bottom_left_player_plate_image, bottom_left_player_cup_image,
+                                    bottom_left_plate_center_x, bottom_left_plate_center_y,
+                                    bottom_left_cup_center_x, bottom_left_cup_center_y);
 
+
+        // Display the bottom right icons.
         var bottom_right_plate_center_x = canvas.width - canvas.width * 56 / 490;
         var bottom_right_plate_center_y = canvas.height - canvas.height * 30 / 275;
-        context.beginPath();
-        context.arc(bottom_right_plate_center_x, bottom_right_plate_center_y, plate_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
-
         var bottom_right_cup_center_x = canvas.width - canvas.width * 23 / 490;
         var bottom_right_cup_center_y = canvas.height - canvas.height * 18 / 275;
-        context.beginPath();
-        context.arc(bottom_right_cup_center_x, bottom_right_cup_center_y, cup_radius, 0, Math.PI * 2, true);
-        context.fillStyle = brick_pattern;
-        context.fill();
+        display_plate_and_cup_icons(plate_radius, cup_radius,
+                                    bottom_right_player_plate_image, bottom_right_player_cup_image,
+                                    bottom_right_plate_center_x, bottom_right_plate_center_y,
+                                    bottom_right_cup_center_x, bottom_right_cup_center_y);
 
         // Draw the options panel.
         var option_panel_width = canvas.width * 74 / 490;
@@ -412,7 +448,7 @@ window.onload = function(){
         context.lineTo(option_panel_x_offset + option_panel_width, option_panel_y_offset);
         context.lineTo(option_panel_x_offset + option_panel_width, option_panel_y_offset - option_panel_height);
         context.lineTo(option_panel_x_offset, option_panel_y_offset - option_panel_height);
-        context.fillStyle = brick_pattern;
+        context.fillStyle = board_inner_pattern;
         context.fill();
 
         //---------------------------------------
@@ -423,7 +459,11 @@ window.onload = function(){
         var lr_player_x_offset = canvas.width / 2.0 - 1.2 * board_side_length;
         var lr_player_y_offset = (canvas.height - tag_length) / 2.0;
         var tb_player_x_offset = (canvas.width - tag_length) / 2.0;
-        var tb_player_y_offset = canvas.height / 2.0 - 1.05 * board_side_length;
+        var tb_player_y_offset = canvas.height / 2.0 - 1.05 * board_side_length
+        var font_size = 0.7 * tag_width;
+        context.font = 'bold ' + font_size.toString() + 'px monospace';
+        context.textAlign="center";
+        context.textBaseline = "middle";;
 
         // Draw the left players name tag.
         context.beginPath();
@@ -431,8 +471,14 @@ window.onload = function(){
         context.lineTo(lr_player_x_offset, lr_player_y_offset + tag_length);
         context.lineTo(lr_player_x_offset + tag_width, lr_player_y_offset + tag_length);
         context.lineTo(lr_player_x_offset + tag_width, lr_player_y_offset);
-        context.fillStyle = board_outer_pattern;
+        context.closePath();
+        context.fillStyle = nametag_pattern;
+        context.strokeStyle = nametag_border_pattern;
+        context.lineWidth = 5;
         context.fill();
+        context.stroke();
+        context.fillStyle = chalk_pattern;
+        write_vertical_text(left_player_id, lr_player_x_offset + tag_width / 2, lr_player_y_offset);
 
         // Draw the right players name tag.
         context.beginPath();
@@ -440,8 +486,14 @@ window.onload = function(){
         context.lineTo(canvas.width - lr_player_x_offset, lr_player_y_offset + tag_length);
         context.lineTo(canvas.width - lr_player_x_offset - tag_width, lr_player_y_offset + tag_length);
         context.lineTo(canvas.width - lr_player_x_offset - tag_width, lr_player_y_offset);
-        context.fillStyle = board_outer_pattern;
+        context.closePath();
+        context.fillStyle = nametag_pattern;
+        context.strokeStyle = nametag_border_pattern;
+        context.lineWidth = 5;
         context.fill();
+        context.stroke();
+        context.fillStyle = chalk_pattern;
+        write_vertical_text(right_player_id, canvas.width - lr_player_x_offset + tag_width / 2, lr_player_y_offset + tag_width);
 
         // Draw the top players name tag.
         context.beginPath();
@@ -449,8 +501,15 @@ window.onload = function(){
         context.lineTo(tb_player_x_offset, tb_player_y_offset + tag_width);
         context.lineTo(tb_player_x_offset + tag_length, tb_player_y_offset + tag_width);
         context.lineTo(tb_player_x_offset + tag_length, tb_player_y_offset);
-        context.fillStyle = board_outer_pattern;
+        context.closePath();
+        context.fillStyle = nametag_pattern;
+        context.strokeStyle = nametag_border_pattern;
+        context.lineWidth = 5;
         context.fill();
+        context.stroke();
+        context.fillStyle = chalk_pattern;
+        context.fillText(top_player_id[0] + ". " + top_player_id.slice(1), tb_player_x_offset + tag_length / 2,
+                         tb_player_y_offset + tag_width / 2);
 
         // Draw the bottom players name tag.
         context.beginPath();
@@ -458,11 +517,16 @@ window.onload = function(){
         context.lineTo(tb_player_x_offset, canvas.height - tb_player_y_offset - tag_width);
         context.lineTo(tb_player_x_offset + tag_length, canvas.height - tb_player_y_offset - tag_width);
         context.lineTo(tb_player_x_offset + tag_length, canvas.height - tb_player_y_offset);
-        context.fillStyle = board_outer_pattern;
+        context.closePath();
+        context.fillStyle = nametag_pattern;
+        context.strokeStyle = nametag_border_pattern;
+        context.lineWidth = 5;
         context.fill();
+        context.stroke();
+        context.fillStyle = chalk_pattern;
+        context.fillText(bottom_player_id[0] + ". " + bottom_player_id.slice(1), tb_player_x_offset + tag_length / 2,
+                         canvas.height - tb_player_y_offset - tag_width / 2);
 
-        bottom_left_player_plate_image.onload();
-        context.restore();
 
 	}, 33*5);
 }
