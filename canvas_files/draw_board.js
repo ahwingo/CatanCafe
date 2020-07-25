@@ -13,34 +13,40 @@ var context = canvas.getContext("2d");
 //----------------------------------------------------------------------------------------------------------------------
 
 var brick_card_image = new Image();
-brick_card_image.src = "./images/cards/brick.png";
+brick_card_image.src = "./images/cards/brick_s.svg";
 
 var ore_card_image = new Image();
-ore_card_image.src = "./images/cards/ore.png";
+ore_card_image.src = "./images/cards/ore_s.svg";
 
 var sheep_card_image = new Image();
-sheep_card_image.src = "./images/cards/sheep.png";
+sheep_card_image.src = "./images/cards/sheep_s.svg";
 
 var wheat_card_image = new Image();
-wheat_card_image.src = "./images/cards/wheat.png";
+wheat_card_image.src = "./images/cards/wheat_s.svg";
 
 var wood_card_image = new Image();
-wood_card_image.src = "./images/cards/wood.png";
+wood_card_image.src = "./images/cards/wood_s.svg";
 
 var knight_card_image = new Image();
-knight_card_image.src = "./images/cards/knight.png";
+knight_card_image.src = "./images/cards/knight_s.svg";
 
 var monopoly_card_image = new Image();
-monopoly_card_image.src = "./images/cards/monopoly.png";
+monopoly_card_image.src = "./images/cards/monopoly_s.svg";
 
 var year_of_plenty_card_image = new Image();
-year_of_plenty_card_image.src = "./images/cards/year_of_plenty.png";
+year_of_plenty_card_image.src = "./images/cards/year_of_plenty_s.svg";
 
 var road_building_card_image = new Image();
-road_building_card_image.src = "./images/cards/road_building.png";
+road_building_card_image.src = "./images/cards/road_builder_s.svg";
 
 var victory_point_card_image = new Image();
-victory_point_card_image.src = "./images/cards/victory_point.png";
+victory_point_card_image.src = "./images/cards/victory_point_s.svg";
+
+var resource_card_image = new Image();
+resource_card_image.src = "./images/cards/resource_card_back.svg";
+
+var development_card_image = new Image();
+development_card_image.src = "./images/cards/development_card_back.svg";
 
 // Determine the resource layout.
 var random_cards = ["ore", "ore", "ore",
@@ -68,74 +74,79 @@ random_cards[j] = temp;
 //----------------------------------------------------------------------------------------------------------------------
 var wheat_video = document.createElement('video');
 wheat_video.muted = true;
-var wheat_patterns = [];
-function draw_wheat_frame(e) {
-  wheat_patterns.push(context.createPattern(wheat_video, "repeat"));
-}
-wheat_video.addEventListener('timeupdate', draw_wheat_frame, false);
+wheat_video.loop = true;
 wheat_video.src = "./images/wheat2.mp4";
 wheat_video.play();
 
 var ocean_video = document.createElement('video');
 ocean_video.muted = true;
-var ocean_patterns = [];
-function draw_ocean_frame(e) {
-  ocean_patterns.push(context.createPattern(ocean_video, "repeat"));
-}
-ocean_video.addEventListener('timeupdate', draw_ocean_frame, false);
+ocean_video.loop = true;
 ocean_video.src = "./images/ocean.mp4";
 ocean_video.play();
 
 var ore_video = document.createElement('video');
 ore_video.muted = true;
-var ore_patterns = [];
-function draw_ore_frame(e) {
-  ore_patterns.push(context.createPattern(ore_video, "repeat"));
-}
-ore_video.addEventListener('timeupdate', draw_ore_frame, false);
+ore_video.loop = true;
 ore_video.src = "./images/ore2.mp4";
 ore_video.play();
 
 var brick_video = document.createElement('video');
 brick_video.muted = true;
-var brick_patterns = [];
-function draw_brick_frame(e) {
-  brick_patterns.push(context.createPattern(brick_video, "repeat"));
-}
-brick_video.addEventListener('timeupdate', draw_brick_frame, false);
+brick_video.loop = true;
 brick_video.src = "./images/brick.mp4";
 brick_video.play();
 
 var grass_video = document.createElement('video');
 grass_video.muted = true;
-var grass_patterns = [];
-function draw_grass_frame(e) {
-  grass_patterns.push(context.createPattern(grass_video, "repeat"));
-}
-grass_video.addEventListener('timeupdate', draw_grass_frame, false);
+grass_video.loop = true;
 grass_video.src = "./images/yellowgrass.mp4";
 grass_video.play();
 
 var wood_video = document.createElement('video');
 wood_video.muted = true;
-var wood_patterns = [];
-function draw_wood_frame(e) {
-  wood_patterns.push(context.createPattern(wood_video, "repeat"));
-}
-wood_video.addEventListener('timeupdate', draw_wood_frame, false);
+wood_video.loop = true;
 wood_video.src = "./images/trees3.mp4";
 wood_video.play();
 
 var desert_video = document.createElement('video');
 desert_video.muted = true;
-var desert_patterns = [];
-function draw_desert_frame(e) {
-  desert_patterns.push(context.createPattern(desert_video, "repeat"));
-}
-desert_video.addEventListener('timeupdate', draw_desert_frame, false);
+desert_video.loop = true;
 desert_video.src = "./images/desert.mp4";
 desert_video.play();
 
+//----------------------------------------------------------------------------------------------------------------------
+// Use this function to draw hexes, filled with the given image and stroked with the given stroke type.
+function draw_hex(center_x, center_y, side_length, image, border, border_width, rotation=Math.PI / 2)
+{
+    context.save();
+    context.beginPath();
+    context.moveTo(center_x + side_length * Math.cos(rotation), center_y+ side_length * Math.sin(rotation));
+    for (var side = 0; side < 7; side++)
+    {
+        var new_x = center_x + side_length * Math.cos(rotation + side * 2 * Math.PI / 6);
+        var new_y = center_y + side_length * Math.sin(rotation + side * 2 * Math.PI / 6);
+        context.lineTo(new_x, new_y);
+    }
+    context.clip();
+    var new_img_height = 2 * side_length;
+    var new_img_width = 2 * side_length;
+    context.drawImage(image,
+                  dx=center_x - new_img_width/2, dy=center_y - new_img_height/2,
+                  dw=new_img_width, dh=new_img_height);
+    context.restore();
+    context.strokeStyle = border;
+    context.lineWidth = border_width;
+    context.moveTo(center_x + side_length * Math.cos(rotation), center_y+ side_length * Math.sin(rotation));
+    for (var side = 0; side < 7; side++)
+    {
+        var new_x = center_x + side_length * Math.cos(rotation + side * 2 * Math.PI / 6);
+        var new_y = center_y + side_length * Math.sin(rotation + side * 2 * Math.PI / 6);
+        context.lineTo(new_x, new_y);
+    }
+    context.stroke();
+}
+
+//----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
 // Load the table and board images into pattern types, which will be used as part of the background.
@@ -206,7 +217,7 @@ function load_game_state()
 function draw_top_side_cards(num_regular, num_development)
     {
     context.fillStyle = nametag_pattern;
-    context.strokeStyle = nametag_border_pattern;
+    context.strokeStyle = "white";
     context.lineWidth = 2;
     var card_width = canvas.width * 50 / 1920;
     var card_height = canvas.height * 75 / 1080;
@@ -263,7 +274,7 @@ function draw_top_side_cards(num_regular, num_development)
 function draw_bottom_side_cards(num_regular, num_development)
 {
     context.fillStyle = nametag_pattern;
-    context.strokeStyle = nametag_border_pattern;
+    context.strokeStyle = "white";
     context.lineWidth = 2;
     var card_width = canvas.width * 50 / 1920;
     var card_height = canvas.height * 75 / 1080;
@@ -275,17 +286,28 @@ function draw_bottom_side_cards(num_regular, num_development)
     var num_second_row = Math.floor(total_cards / 2.0);
     var first_row_x_offset = (canvas.width - num_first_row*card_width - (num_first_row - 1)*card_spacing) / 2;
     var second_row_x_offset = 0.5 * card_width + first_row_x_offset;
+    var card_count = 0;
     for (var i = 0; i < num_first_row; i++)
     {
         var x_value = first_row_x_offset + i * (card_width + card_spacing);
-        context.fillRect(x_value, first_row_y_offset, card_width, card_height);
+        if (card_count < num_regular) {
+            context.drawImage(resource_card_image, dx=x_value, dy=first_row_y_offset, dWidth=card_width, dHeight=card_height);
+        } else {
+            context.drawImage(development_card_image, dx=x_value, dy=first_row_y_offset, dWidth=card_width, dHeight=card_height);
+        }
         context.strokeRect(x_value, first_row_y_offset, card_width, card_height);
+        card_count += 1;
     }
     for (var i = 0; i < num_second_row; i++)
     {
         var x_value = second_row_x_offset + i * (card_width + card_spacing);
-        context.fillRect(x_value, second_row_y_offset, card_width, card_height);
+        if (card_count < num_regular) {
+            context.drawImage(resource_card_image, dx=x_value, dy=second_row_y_offset, dWidth=card_width, dHeight=card_height);
+        } else {
+            context.drawImage(development_card_image, dx=x_value, dy=second_row_y_offset, dWidth=card_width, dHeight=card_height);
+        }
         context.strokeRect(x_value, second_row_y_offset, card_width, card_height);
+        card_count += 1;
     }
 }
 
@@ -311,7 +333,9 @@ function draw_left_side_cards(num_regular, num_development) {
         {
         var row_idx = Math.floor(i / 5);
         var col_idx = i % 5;
-        context.fillRect(column_offsets[col_idx], row_offsets[row_idx], card_width, card_height);
+        if (i < num_regular) { image_type = resource_card_image; }
+        else { image_type = development_card_image; }
+        context.drawImage(image_type, dx=column_offsets[col_idx], dy=row_offsets[row_idx], dWidth=card_width, dHeight=card_height);
         context.strokeRect(column_offsets[col_idx], row_offsets[row_idx], card_width, card_height);
         }
 }
@@ -338,7 +362,9 @@ function draw_right_side_cards(num_regular, num_development) {
     {
         var row_idx = Math.floor(i / 5);
         var col_idx = i % 5;
-        context.fillRect(column_offsets[col_idx], row_offsets[row_idx], card_width, card_height);
+        if (i < num_regular) { image_type = resource_card_image; }
+        else { image_type = development_card_image; }
+        context.drawImage(image_type, dx=column_offsets[col_idx], dy=row_offsets[row_idx], dWidth=card_width, dHeight=card_height);
         context.strokeRect(column_offsets[col_idx], row_offsets[row_idx], card_width, card_height);
     }
 }
@@ -352,7 +378,6 @@ function write_vertical_text(player_id, x_offset, y_offset)
     {
     context.save();
     context.rotate(Math.PI / 2.0);
-    console.log("canvas width: ", canvas.width);
     var new_name = player_id[0] + ". " + player_id.slice(1);
     context.fillText(new_name, x_offset, -y_offset);
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -455,9 +480,6 @@ window.onload = function(){
         context.fillStyle = table_top_pattern;
         context.fillRect(0, 0, canvas.width, canvas.height);
 
-        //bottom_left_player_plate_image.onload();
-        //context.restore();
-
         //-------------------------------------------------------------------------------------------------------------
         // Define structural parameters to layout the board, using ratios relative to the 1920 x 1080 resolution.
         //-------------------------------------------------------------------------------------------------------------
@@ -467,6 +489,7 @@ window.onload = function(){
         board_inner_side_length = 0.95 * board_side_length;
         board_x_offset = canvas.width / 2.0;
         board_y_offset = canvas.height / 2.0;
+
 
         // Define the dimensions of the hexes.
         rows = [3, 4, 5, 4, 3];  // These are the number of hexagons in each row of the board.
@@ -479,32 +502,14 @@ window.onload = function(){
         // Draw the board and its hexes.
         //-------------------------------------------------------------------------------------------------------------
 
-        // Get the main patterns.
-        var ocean_idx = counter % ocean_patterns.length;
-        var ocean_pattern = ocean_patterns[ocean_idx];
-
-        var ore_idx = counter % ore_patterns.length;
-        var ore_pattern = ore_patterns[ore_idx];
-
-        var wood_idx = counter % wood_patterns.length;
-        var wood_pattern = wood_patterns[wood_idx];
-
-        var wheat_idx = counter % wheat_patterns.length;
-        var wheat_pattern = wheat_patterns[wheat_idx];
-
-        var grass_idx = counter % grass_patterns.length;
-        var grass_pattern = grass_patterns[grass_idx];
-
-        var brick_idx = counter % brick_patterns.length;
-        var brick_pattern = brick_patterns[brick_idx];
-
-        var desert_idx = counter % desert_patterns.length;
-        var desert_pattern = desert_patterns[desert_idx];
+        // First draw the board.
+        draw_hex(board_x_offset, board_y_offset, board_side_length, board_outer_image, board_outer_pattern, 0, rotation=0);
+        draw_hex(board_x_offset, board_y_offset, board_inner_side_length, ocean_video, board_outer_pattern, 0, rotation=0);
 
         // Increment the counter. This will eventually overflow and roll over.
         counter += 1;
 
-        // First draw the board.
+        /*
         context.beginPath();
         context.moveTo(board_x_offset + board_side_length * Math.cos(0),
                        board_y_offset + board_side_length * Math.sin(0));
@@ -516,20 +521,7 @@ window.onload = function(){
             }
         context.fillStyle = board_outer_pattern;
         context.fill();
-
-        // Then draw the inner board.
-        context.beginPath();
-        context.moveTo(board_x_offset + board_inner_side_length * Math.cos(0),
-                       board_y_offset + board_inner_side_length * Math.sin(0));
-        for (var side = 0; side < 7; side++)
-            {
-            var new_x = board_x_offset + board_inner_side_length * Math.cos(side * 2 * Math.PI / 6);
-            var new_y = board_y_offset + board_inner_side_length * Math.sin(side * 2 * Math.PI / 6);
-            context.lineTo(new_x, new_y);
-            }
-        //context.fillStyle = board_inner_pattern;
-        context.fillStyle = ocean_pattern;
-        context.fill();
+         */
 
         // Then, draw the hexes.
         var hex_y_offset = hex_starting_y;
@@ -548,35 +540,24 @@ window.onload = function(){
                 }
             for (var hex = 0; hex < hex_count; hex++)
                 {
-                context.beginPath();
-                context.moveTo(hex_x_offset + hex_side_length * Math.cos(Math.PI / 2),
-                               hex_y_offset + hex_side_length * Math.sin(Math.PI / 2));
-                for (var side = 0; side < 7; side++)
-                    {
-                    var new_x = hex_x_offset + hex_side_length * Math.cos(Math.PI / 2 + side * 2 * Math.PI / 6);
-                    var new_y = hex_y_offset + hex_side_length * Math.sin(Math.PI / 2 + side * 2 * Math.PI / 6);
-                    context.lineTo(new_x, new_y);
+                    var resource_type = resource_layout[hex_num];
+                    var resource_image;
+                    if (resource_type === "desert") {
+                        resource_image = desert_video;
+                    } else if (resource_type === "ore") {
+                        resource_image = ore_video;
+                    } else if (resource_type === "wheat") {
+                        resource_image = wheat_video;
+                    } else if (resource_type === "sheep") {
+                        resource_image = grass_video;
+                    } else if (resource_type === "wood") {
+                        resource_image = wood_video;
+                    } else {
+                        resource_image = brick_video;
                     }
-                //context.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
-                resource_type = resource_layout[hex_num];
-                if (resource_type === "desert") {
-                    context.fillStyle = desert_pattern;
-                } else if (resource_type === "ore") {
-                    context.fillStyle = ore_pattern;
-                } else if (resource_type === "wheat") {
-                    context.fillStyle = wheat_pattern;
-                } else if (resource_type === "sheep") {
-                    context.fillStyle = grass_pattern;
-                } else if (resource_type === "wood") {
-                    context.fillStyle = wood_pattern;
-                } else {
-                    context.fillStyle = brick_pattern;
-                }
-                hex_num += 1;
-                context.strokeStyle = board_outer_pattern;
-                context.lineWidth = 5;
-                context.fill();
-                context.stroke();
+
+                    draw_hex(hex_x_offset, hex_y_offset, hex_side_length, resource_image, board_outer_pattern, 5);
+                    hex_num += 1;
                 hex_x_offset += Math.sqrt(3) * hex_side_length;
                 }
             hex_y_offset += 1.5 * hex_side_length;
@@ -652,7 +633,7 @@ window.onload = function(){
         var right_y_offset = canvas.width / 2.0 + 1.2 * board_side_length - tag_width / 2;
 
         var tb_player_x_offset = (canvas.width - tag_length) / 2.0;
-        var tb_player_y_offset = canvas.height / 2.0 - 1.0 * board_side_length
+        var tb_player_y_offset = canvas.height / 2.0 - 1.0 * board_side_length;
         var font_size = 0.7 * tag_width;
         context.font = 'bold ' + font_size.toString() + 'px Brush Script MT';
         context.textAlign="center";
@@ -725,7 +706,7 @@ window.onload = function(){
         draw_top_side_cards(24, 8);
         draw_bottom_side_cards(22, 3);
         draw_left_side_cards(22, 3);
-        draw_right_side_cards(22, 3);
+        draw_right_side_cards(12, 8);
 
-	}, 33*5);
+	}, 8);
 }
